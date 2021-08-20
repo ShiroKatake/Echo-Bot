@@ -1,3 +1,5 @@
+const ExtractEmoji = require('../utils/extract_emoji.js');
+
 module.exports = {
   name: 't',
   description: "Sets up a reaction role message!",
@@ -5,17 +7,6 @@ module.exports = {
     const channel = '668982788933812246';
     const redRole = message.guild.roles.cache.find(role => role.name === "Red Team");
     const yellowRole = message.guild.roles.cache.find(role => role.name === "Yellow Team");
-      
-    console.log(args);
-
-    let emojiOne = args[0].match(/<:.+?:\d+>/g);
-    let emoji1Id = emojiOne[0].match(/\d+/g);
-
-    let emojiTwo = args[1].match(/<:.+?:\d+>/g);
-    let emoji2Id = emojiTwo ? emojiTwo[0].match(/\d+/g) : args[1];
-
-    const yellowEmoji = `${emoji1Id}`;
-    const redEmoji = `${emoji2Id}`;
 
     let embed = new Discord.MessageEmbed()
       .setColor('#e42643')
@@ -24,9 +15,15 @@ module.exports = {
 
     let messageEmbed = await message.channel.send(embed);
 
-    messageEmbed.react(yellowEmoji);
-    messageEmbed.react(redEmoji);
+    console.log(args);
 
+    args.forEach(arg => {
+      const emoji = ExtractEmoji(arg);
+      messageEmbed.react(`${emoji}`);
+    })
+
+    const yellowEmoji = `878183671780233246`;
+    const redEmoji = `❤️`;
 
     bot.on('messageReactionAdd', async (reaction, user) => {
       if (reaction.message.partial) await reaction.message.fetch();
