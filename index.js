@@ -1,7 +1,8 @@
-const { Client, MessageEmbed, Collection } = require('discord.js');
+const Discord = require('discord.js');
 const config = require('./config');
 
-const bot = new Client({
+const bot = new Discord.Client({
+  partials: ["MESSAGE", "CHANNEL", "REACTION",],
   presence: {
     status: 'online',
     activity: {
@@ -28,7 +29,7 @@ bot.on('message', async message => {
 
   if (!message.content.startsWith(config.prefix) || message.author.bot) return;
 
-  command.execute(message, arg);
+  command.execute(message, arg, Discord, bot);
 });
 
 require('./server')();
