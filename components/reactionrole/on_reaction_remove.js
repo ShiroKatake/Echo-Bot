@@ -1,4 +1,4 @@
-module.exports = (bot, message) => {
+module.exports = (bot, message, erDictionary) => {
   const redRole = message.guild.roles.cache.find(role => role.name === "Red Team");
   const yellowRole = message.guild.roles.cache.find(role => role.name === "Yellow Team");
   const yellowEmoji = `878183671780233246`;

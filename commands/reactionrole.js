@@ -1,15 +1,16 @@
-const ExtractEmoji = require('../components/reactionrole/extract_emoji.js');
-const HandOnReactionAdd = require('../components/reactionrole/on_reaction_add.js');
-const HandOnReactionRemove = require('../components/reactionrole/on_reaction_remove.js');
+const HandleArguments = require('../components/reactionrole/extract_emoji.js');
+const HandleOnReactionAdd = require('../components/reactionrole/on_reaction_add.js');
+const HandleOnReactionRemove = require('../components/reactionrole/on_reaction_remove.js');
 
 module.exports.config = {
   name: 't',
-  argLength: [7],
+  argLength: [6],
   argCheckOverride: true,
   description: "Sets up a reaction role message."
 }
 
 module.exports.run = async (message, args, Discord, bot) => {
+  let erDictionary = {}; //er = emoji_role
   let embed = new Discord.MessageEmbed()
     .setColor('#e42643')
     .setTitle('Choose a team to join!')
@@ -17,13 +18,15 @@ module.exports.run = async (message, args, Discord, bot) => {
 
   let messageEmbed = await message.channel.send(embed);
 
-  console.log(args);
+  erDictionary = HandleArguments(args);
+  for(var reaction in erDictionary) {
+    messageEmbed.react(`${reaction}`);
+  }
 
-  args.forEach(arg => {
-    const emoji = ExtractEmoji(arg);
-    messageEmbed.react(`${emoji}`);
-  })
+  //If the first arg is a role
 
-  HandOnReactionAdd(bot, message);
-  HandOnReactionRemove(bot, message);
+  //If the first arg is a reaction
+
+  HandleOnReactionAdd(bot, message, erDictionary);
+  HandleOnReactionRemove(bot, message, erDictionary);
 }
