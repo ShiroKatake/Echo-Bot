@@ -24,7 +24,6 @@ module.exports = function HandleArguments(args) {
   for (var i = 0; i < emojis.length; i++) {
     erDictionary[`${emojis[i]}`] = roles[i] ? roles[i] : roles[0];
   }
-  console.log(erDictionary);
   return erDictionary;
 }
 
