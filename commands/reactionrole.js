@@ -28,5 +28,5 @@ module.exports.run = async (message, args, Discord, bot) => {
   //If the first arg is a reaction
 
   HandleOnReactionAdd(bot, message, erDictionary);
-  HandleOnReactionRemove(bot, message, erDictionary);
+  HandleOnReactionRemove(bot, message, messageEmbed, erDictionary);
 }
