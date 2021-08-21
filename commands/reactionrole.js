@@ -18,15 +18,25 @@ module.exports.run = async (message, args, Discord, bot) => {
 
   let messageEmbed = await message.channel.send(embed);
 
-  erDictionary = HandleArguments(args);
+  erDictionary = HandleArguments(args, erDictionary);
   for(var reaction in erDictionary) {
-    messageEmbed.react(`${reaction}`);
+    await messageEmbed.react(`${reaction}`);
   }
+
+  console.log("before");
+  console.log(bot._events);
 
   //If the first arg is a role
 
   //If the first arg is a reaction
+  HandleOnReactionAdd(bot, message, messageEmbed, erDictionary);
 
-  HandleOnReactionAdd(bot, message, erDictionary);
-  HandleOnReactionRemove(bot, message, messageEmbed, erDictionary);
+  bot.on('messageReactionRemove', async (reaction, user) => HandleOnReactionRemove(bot, user, reaction, message, messageEmbed, erDictionary));
+  console.log(`what are you? ${typeof bot._events.messageReactionRemove}`);
+  if (typeof bot._events.messageReactionRemove === 'object') bot.off('messageReactionRemove', bot._events.messageReactionRemove[0]);
+  
+  console.log("after");
+  console.log(bot._events);
+  console.log(bot._events.messageReactionRemove[0]);
+  console.log(bot._events.messageReactionRemove[1]);
 }
