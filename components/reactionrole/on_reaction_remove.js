@@ -1,9 +1,6 @@
-module.exports = listener = async (bot, user, reaction, message, botMessage, erDictionary) => {
-    let roleHasManyOccurences = false;
-    if (reaction.message.id != botMessage.author.lastMessageID) {
-      bot.removeListener('messageReactionRemove', listener);
-      roleHasManyOccurences = true; //If the user reacted to a bot message in the past, disregard it.
-    }
+module.exports = async (reaction, user, message, botMessage, erDictionary) => {
+  //If the user reacted to a bot message in the past, disregard it.
+    if (reaction.message.id != botMessage.author.lastMessageID) return;
     if (reaction.message.partial) await reaction.message.fetch();
     if (reaction.partial) await reaction.fetch();
     if (user.bot) return;
@@ -26,6 +23,7 @@ module.exports = listener = async (bot, user, reaction, message, botMessage, erD
 
       //If the user reacted to many emojis that assign the same role,
       //don't remove that role until there's only one left.
+      let roleHasManyOccurences = false;
       reactedRoles.forEach(reactedRole => {
         if (reactedRole == reactionRoleToBeRemoved) roleHasManyOccurences = true;
       });
