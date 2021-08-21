@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "discord.js": "^12.2.0",
+    "emoji-regex": "^9.2.2",
     "express": "^4.17.1"
   }
 }
