@@ -1,41 +1,54 @@
 const unicodeEmojiRegex = require('emoji-regex/RGI_Emoji.js');
 //TODO: Write error messages and change return statements into reply statements.
-module.exports = function HandleArguments(args, erDictionary) {
-  erDictionary = {};
+module.exports = (args, erDictionary) => {
+  try {
+    erDictionary = {};
 
-  //Get role from first arg.
-  let role = ExtractRole(args[0]);
-  let roleArgPosition = 0;
+    //Get role from first arg.
+    let role = ExtractRole(args[0]);
+    let roleArgPosition = 0;
 
-  //If the first arg is not a role, return error.
-  if (!role) return;
+    //If the first arg is not a role, return error.
+    if (!role) 
+      throw "the first argument must be a role.";
 
+    for (var i = 1; i < args.length; i++) {
+      //If there's anything before or after the role or reaction, return error.
+      if (!SanityCheck(args[i]))
+        throw `argument ${i + 1} needs a space either before or after it.`;
 
-  for (var i = 1; i < args.length; i++) {
-    //If there's anything before or after the role or reaction, return error.
-    if (!SanityCheck(args[i])) return;
-    //Get role from second arg onwards.
-    let argRole = ExtractRole(args[i]);
+      //Get role from second arg onwards.
+      let argRole = ExtractRole(args[i]);
 
-    if (argRole) {
-      //If there are 2 consecutive args that are roles, return error.
-      if (i - roleArgPosition == 1) return;
-      role = argRole;
-      roleArgPosition = i;
-      continue;
+      if (argRole) {
+        //If there are 2 consecutive args that are roles, return error.
+        if (i - roleArgPosition == 1)
+          throw "a role must be followed by at least 1 reaction.";
+
+        role = argRole;
+        roleArgPosition = i;
+        continue;
+      }
+      else if (!argRole) {
+        let reaction = ExtractReaction(args[i]);
+
+        //If arg is neither role or reaction, return error.
+        if (!reaction)
+          throw `"${args[i]}" is not a valid role or reaction.`;
+
+        //If a reaction is already used for a role, return error.
+        if (erDictionary[reaction])
+          throw "a reaction currently can't be used for 2 roles. If you've found a use case for that, tell Ichi so he can make it work.";
+
+        erDictionary[`${reaction}`] = role;
+      }
     }
-    else if (!argRole) {
-      let reaction = ExtractReaction(args[i]);
-      //If arg is neither role or reaction, return error.
-      if (!reaction) return;
-      //If a reaction is already used for a role, return error.
-      if (erDictionary[reaction]) return;
-      erDictionary[`${reaction}`] = role;
-      console.log(erDictionary);
-    }
+
+    return erDictionary;
   }
-
-  return erDictionary;
+  catch (error) {
+    throw error;
+  }
 }
 
 function SanityCheck(str) {
