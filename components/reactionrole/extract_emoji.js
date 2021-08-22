@@ -10,12 +10,12 @@ module.exports = (args, erDictionary) => {
 
     //If the first arg is not a role, return error.
     if (!role) 
-      throw "the first argument must be a role.";
+      throw new Error("the first argument must be a role.");
 
     for (var i = 1; i < args.length; i++) {
       //If there's anything before or after the role or reaction, return error.
       if (!SanityCheck(args[i]))
-        throw `argument ${i + 1} needs a space either before or after it.`;
+        throw new Error(`argument ${i + 1} needs a space either before or after it.`);
 
       //Get role from second arg onwards.
       let argRole = ExtractRole(args[i]);
@@ -23,7 +23,7 @@ module.exports = (args, erDictionary) => {
       if (argRole) {
         //If there are 2 consecutive args that are roles, return error.
         if (i - roleArgPosition == 1)
-          throw "a role must be followed by at least 1 reaction.";
+          throw new Error("a role must be followed by at least 1 reaction.");
 
         role = argRole;
         roleArgPosition = i;
@@ -34,11 +34,11 @@ module.exports = (args, erDictionary) => {
 
         //If arg is neither role or reaction, return error.
         if (!reaction)
-          throw `"${args[i]}" is not a valid role or reaction.`;
+          throw new Error(`"${args[i]}" is not a valid role or reaction.`);
 
         //If a reaction is already used for a role, return error.
         if (erDictionary[reaction])
-          throw "a reaction currently can't be used for 2 roles. If you've found a use case for that, tell Ichi so he can make it work.";
+          throw new Error("a reaction currently can't be used for 2 roles. If you've found a use case for that, tell Ichi so he can make it work.");
 
         erDictionary[`${reaction}`] = role;
       }

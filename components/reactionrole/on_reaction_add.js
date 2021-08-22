@@ -10,7 +10,7 @@ module.exports = async (reaction, user, message, botMessage, erDictionary) => {
     if (reaction.message.channel.id == message.channel.id) {
       const guildMember = reaction.message.guild.members.cache.get(user.id);
       let role = GetRoleFromReaction(reaction, erDictionary);
-      if(!role) throw "I can't find the role for to this reaction to assign you for some reason . . . Please let Ichi know so he can fix this.";
+      if(!role) return;
       
       await guildMember.roles.add(`${role}`);
     }

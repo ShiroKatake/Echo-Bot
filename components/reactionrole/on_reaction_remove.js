@@ -1,5 +1,6 @@
 module.exports = async (reaction, user, message, botMessage, erDictionary) => {
   try {
+    //If the user removed a reaction to a bot message in the past, disregard it.
     if (reaction.message.id != botMessage.author.lastMessageID) return;
     if (reaction.message.partial) await reaction.message.fetch();
     if (reaction.partial) await reaction.fetch();
@@ -34,7 +35,7 @@ module.exports = async (reaction, user, message, botMessage, erDictionary) => {
     return;
   }
   catch (error) {
-    throw `Ichi failed to see this coming . . . ${error}`;
+    throw error;
   }
 }
 
